@@ -20,7 +20,7 @@ print(f"Number of samples: {trandata.shape[0]}")
 print(f"Number of features: {trandata.shape[1]}")
 
 # Run KSLFN algorithm
-k = 3            # Number of fuzzy k-nearest neighbors
+k = 10            # Number of fuzzy k-nearest neighbors
 ksl_weight = 0.5 # Weight for KSL component (0.0 to 1.0, FN weight = 1 - ksl_weight)
 
 print(f"\nRunning KSLFN with k={k}, ksl_weight={ksl_weight}...")

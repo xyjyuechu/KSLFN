@@ -1,6 +1,6 @@
 # KSLFN
 
-Yijia Chen, Ze Zhang, Hanwen Zhang, Bingye Zhou, **Zhong Yuan*** (通讯作者), KSLFN: Kernel Sparse Learning with Fuzzy Neighborhood for Outlier Detection, Fuzzy Sets and Systems, 2025.
+Yijia Chen, Ze Zhang, Hanwen Zhang, Bingye Zhou, **Zhong Yuan*** , KSLFN: Kernel Self-supervised Learning based Fuzzy Neighborhood outlier detection.
 
 ## Abstract
 
