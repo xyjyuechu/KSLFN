@@ -1,6 +1,6 @@
 # KSLFN
 
-Yijia Chen, Ze Zhang, Hanwen Zhang, Bingye Zhou, **Zhong Yuan*** , KSLFN: Kernel Self-supervised Learning based Fuzzy Neighborhood outlier detection.
+Yijia Chen, Ze Zhang, Hanwen Zhang, Jiaqi Yang,Bingye Zhou, **Zhong Yuan*** , KSLFN: Kernel Self-supervised Learning based Fuzzy Neighborhood outlier detection.
 
 ## Abstract
 
