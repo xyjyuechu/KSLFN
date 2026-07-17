@@ -10,7 +10,12 @@ import matplotlib.pyplot as plt
 import math
 
 
-DEFAULT_DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if torch.cuda.is_available():
+    DEFAULT_DEVICE = torch.device("cuda")
+elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+    DEFAULT_DEVICE = torch.device("mps")
+else:
+    DEFAULT_DEVICE = torch.device("cpu")
 RIDGE_EPS = 1e-6  # 小幅正则化，缓解求解时的病态矩阵
 
 def _resolve_device(device=None):
@@ -65,11 +70,11 @@ def KSL(data, device=None):
         gamma = 1e-12
 
     device = _resolve_device(device)
-    distance_tensor = torch.from_numpy(distance_matrix).to(device=device, dtype=torch.float64)
+    distance_tensor = torch.from_numpy(distance_matrix).to(device=device, dtype=torch.float32)
     K = torch.exp(-(distance_tensor ** 2) / (2 * (gamma ** 2)))
 
-    coef_matrix = torch.zeros((n, n), device=device, dtype=torch.float64)
-    reconstruction_error = torch.zeros(n, device=device, dtype=torch.float64)
+    coef_matrix = torch.zeros((n, n), device=device, dtype=torch.float32)
+    reconstruction_error = torch.zeros(n, device=device, dtype=torch.float32)
 
     for i in range(n):
         support = []
@@ -115,16 +120,17 @@ def KSL(data, device=None):
 
     KSL_score = torch.sqrt(torch.clamp(reconstruction_error, min=0.0))
     max_score = KSL_score.max()
-    if max_score.item() > 0:
-        KSL_score = KSL_score / max_score
+    min_score = KSL_score.min()
+    if max_score.item() > min_score.item():
+        KSL_score = (KSL_score - min_score) / (max_score - min_score)
 
     KSL_score_np = KSL_score.detach().cpu().numpy()
 
-        # norm = torch.linalg.norm(coef_matrix, dim=1, keepdim=True)
-        # norm = torch.where(norm == 0, 1 , norm)
-        # normalized_matrix = coef_matrix / norm
-        # cosine_similarity = torch.clamp(normalized_matrix @ normalized_matrix.T, min=0.0)
-        # cosine_similarity_np = cosine_similarity.detach().cpu().numpy()
+    # norm = torch.linalg.norm(coef_matrix, dim=1, keepdim=True)
+    # norm = torch.where(norm == 0, 1.0 , norm)
+    # normalized_matrix = coef_matrix / norm
+    # cosine_similarity = torch.clamp(normalized_matrix @ normalized_matrix.T, min=0.0)
+    # cosine_similarity_np = cosine_similarity.detach().cpu().numpy()
     K_np = K.detach().cpu().numpy()
 
     return K_np, KSL_score_np

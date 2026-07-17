@@ -13,7 +13,7 @@ KSLFN/
 │   ├── KSLFN.py    # Main algorithm implementation
 │   ├── Demo.py     # Demo script
 │   └── Example.mat # Small example dataset
-├── Datasets/       # 28 benchmark datasets from the paper
+├── Datasets/       # 32 benchmark datasets from the paper
 └── README.md
 ```
 
@@ -33,7 +33,7 @@ Dataset: Example
 Number of samples: 148
 Number of features: 18
 
-Running KSLFN with k=3, ksl_weight=0.5...
+Running KSLFN with k=10, ksl_weight=0.5...
 
 Outlier scores (higher = more likely to be outlier):
 [0.06083036 0.03930366 0.07601323 ... 0.02771192 0.03095525]
@@ -76,7 +76,7 @@ scores = KSLFN(data=trandata, k=k, ksl_weight=ksl_weight)
 
 ## Datasets
 
-The `Datasets/` folder contains 28 benchmark datasets used in the paper:
+The `Datasets/` folder contains 32 benchmark datasets used in the paper:
 
 | No. | Dataset | Attributes | Objects | Outliers |
 |-----|---------|------------|---------|----------|
@@ -105,10 +105,16 @@ The `Datasets/` folder contains 28 benchmark datasets used in the paper:
 | 23 | Wine | 13 | 129 | 10 |
 | 24 | Yeast | 8 | 1141 | 5 |
 | 25 | Zoo | 17 | 100 | 4 |
+| 26 | Annthyroid | 6 | 7,200 | 534 |
+| 27 | Ecoli | 7 | 336 | 9 |
+| 28 | Glass | 9 | 214 | 9 |
+| 29 | Mammography | 6 | 11,183 | 260 |
+| 30 | MNIST | 100 | 7,603 | 700 |
+| 31 | Pendigits | 16 | 6,870 | 156 |
+| 32 | Satimage-2 | 36 | 5,803 | 71 |
 
 ## Requirements
 
 ```bash
 pip install numpy scipy torch scikit-learn
 ```
-
