@@ -103,26 +103,36 @@ def KSL(data, device=None):
                 coeffs[:, None] * K.index_select(0, support_tensor), dim=0
             )
             residual = K[i] - reconstruction
-            residual_norm = torch.dot(residual, residual)
+
+            # Squared reconstruction error in the RKHS:
+            # ||phi(x_i) - Phi_S c||^2
+            # = K_ii - 2 c^T K_Si + c^T K_SS c.
+            squared_error = (
+                K[i, i]
+                - 2.0 * torch.dot(coeffs, k_i_support)
+                + torch.dot(coeffs, k_support @ coeffs)
+            )
+            reconstruction_error[i] = torch.clamp(squared_error, min=0.0)
 
             coherence = torch.abs(residual)
             coherence[i] = 0.0
             if support_tensor.numel() > 0:
                 coherence.index_fill_(0, support_tensor, 0.0)
 
-            if residual_norm.item() < thr:
+            if reconstruction_error[i].item() < thr:
                 break
-        #print(coeffs.shape)
+
         if support and coeffs is not None:
             support_tensor = torch.tensor(support, device=device, dtype=torch.long)
             coef_matrix[i, support_tensor] = coeffs
-            reconstruction_error[i] = torch.clamp(residual_norm, min=0.0)
 
     KSL_score = torch.sqrt(torch.clamp(reconstruction_error, min=0.0))
     max_score = KSL_score.max()
     min_score = KSL_score.min()
     if max_score.item() > min_score.item():
         KSL_score = (KSL_score - min_score) / (max_score - min_score)
+    else:
+        KSL_score = torch.zeros_like(KSL_score)
 
     KSL_score_np = KSL_score.detach().cpu().numpy()
 
